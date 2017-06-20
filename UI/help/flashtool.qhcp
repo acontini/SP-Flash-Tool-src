@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QHelpCollectionProject version="1.0">
+  <assistant>
+    <title>Flash Tool</title>
+    <applicationIcon>images/application.png</applicationIcon>
+    <cacheDirectory>Mediatek/FlashTool</cacheDirectory>
+    <startPage>qthelp://com.mediatek.flashtool/doc/welcome.htm</startPage>
+    <aboutMenuText>
+       <text>About Flash Tool</text>
+    </aboutMenuText>   
+    <aboutDialog>
+       <file>about.txt</file>
+       <icon>images/application.png</icon>
+    </aboutDialog>       
+    <enableDocumentationManager>false</enableDocumentationManager>
+    <enableAddressBar>false</enableAddressBar>
+    <enableFilterFunctionality>false</enableFilterFunctionality>
+  </assistant>
+  <docFiles>
+     <generate>
+        <file>
+           <input>flashtool.qhp</input>
+           <output>flashtool.qch</output>
+        </file>
+     </generate>
+     <register>
+        <file>flashtool.qch</file>
+     </register>
+  </docFiles>
+</QHelpCollectionProject> 
+  

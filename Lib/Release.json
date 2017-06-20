@@ -1,0 +1,43 @@
+{
+    "Version" : "1.1311.01",
+    
+    "New-Features/Enhancements" : [
+        "1. Adding MT7623&MT7683 Platform;",
+        "2. Adding MT8163 E2 Platform;",
+        "3. Support EMMC Test 4GB On Denali;"
+    ],
+    
+    "Bug-Fixed" : [
+    		"1. Fxing WDT Reset Device Failed On Linux;"
+    ],
+    
+    "Limitations" : {
+    	 "Bringup": "MT6755"
+    	 "Update": "true"
+    },
+    	
+    "Support-Platforms" : [
+        "MT6573"
+        "MT6575"
+        "MT6577"
+        "MT6589"
+        "MT6572"
+        "MT6582"
+        "MT8135"
+        "MT6592"
+        "MT6571"
+        "MT8127"
+        "MT6595"
+        "MT6752"
+        "MT2601"
+        "MT8173"
+        "MT6795"
+        "MT6735"
+        "MT6753"
+        "MT8163"
+        "MT8590"
+        "MT6580"
+        "MT7623"
+        "MT7683"
+    ]
+}

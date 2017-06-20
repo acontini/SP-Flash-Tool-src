@@ -1,0 +1,6 @@
+SP Flash Tool(Linux x64)
+(Build-Date: Jan 24 2013 14:52:01)
+
+Official Release v3.1251.5.103
+
+Copyright 2001-2013 MediaTek Inc.

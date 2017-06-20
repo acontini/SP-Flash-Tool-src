@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+  <namespace>com.mediatek.flashtool</namespace>
+  <virtualFolder>doc</virtualFolder>
+  <filterSection>
+     <toc>
+        <section title="Welcome To Flash Tool" ref="welcome.htm">
+          <section title="Download" ref="Download.htm">
+              <section title="General Configuration" ref="configuration.htm"></section>
+              <section title="Download Process" ref="Download process.htm"></section>
+              <section title="Debug Information" ref="debug info.htm"></section>
+              <section title="Appendix: Partition Type" ref="appendx.htm"></section>
+          </section>
+          <section title="Format" ref="Format.htm"> </section>
+          <section title="Read back" ref="readback.htm"></section>
+          <section title="Memory Test" ref="memoryTest.htm"></section>
+          <section title="Parameter Setting" ref="OTP.htm"></section>
+          <section title="Option" ref="option.htm">
+             <section title="General" ref="General.htm"></section>
+             <section title="Connection" ref="Connection.htm"></section>
+             <section title="Download" ref="DownloadOption.htm"></section>
+             <section title="Install and Update" ref="Install.htm"></section>
+          </section>
+          <section title="Console" ref="console.htm">
+             <section title="Configure File" ref="ConfigFile.htm"></section>
+             <section title="Command" ref="Command.htm"></section>
+             <section title="Operation" ref="operation.htm"></section>
+          </section>
+          <section title="Other Information" ref="enterAdvMode.htm"> 
+             <section title="Physical Format/Readback" ref="PhysicalFormat.htm"></section>
+             <section title="Memory Write" ref="writeMemory.htm"></section>
+             <section title="Security Download" ref="SecurityDL.htm"></section>
+          </section>         
+          <section title="FAQ" ref="faqr.htm"></section>
+        </section>
+      </toc>
+      <keywords>
+         <keyword name="Download" ref="Download.htm"/>
+         <keyword name="Download" ref="SecurityDL.htm"/>
+         <keyword name="Download" ref="DownloadOption.htm"/>
+         <keyword name="Download" ref="Download process.htm"/>
+         <keyword name="Flashtool" ref="welcome.htm"/>
+         <keyword name="Format" ref="Format.htm"/>
+         <keyword name="Format" ref="PhysicalFormat.htm"/>
+         <keyword name="Readback" ref="readback.htm"/>
+         <keyword name="Install" ref="Install.htm"/>
+         <keyword name="Option" ref="option.htm"/>
+         <keyword name="Theme" ref="General.htm"/>
+         <keyword name="Language" ref="General.htm"/>
+         <keyword name="Short Cut" ref="General.htm"/>
+         <keyword name="Connection" ref="Connection.htm"/>
+         <keyword name="Theme" ref="General.htm"/>
+         <keyword name="Console" ref="console.htm"/>
+         <keyword name="Command" ref="console.htm"/>
+         <keyword name="operation" ref="console.htm"/>
+         <keyword name="Debug" ref="debug info.htm"/>
+         <keyword name="Memory" ref="memoryTest.htm"/>
+         <keyword name="Memory" ref="writeMemory.htm"/>
+         <keyword name="Advance" ref="enterAdvMode.htm"/>
+         <keyword name="Configuration" ref="configuration.htm"/>
+         <keyword name="Configuration" ref="ConfigFile.htm"/>
+         <keyword name="OTP" ref="OTP.htm"/>
+     </keywords>
+     <files>
+         <file>images/*.jpg</file>
+         <file>images/*.gif</file>
+         <file>images/*.png</file>
+         <file>*.htm</file>         
+     </files>
+   </filterSection>
+ </QtHelpProject>

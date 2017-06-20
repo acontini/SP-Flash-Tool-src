@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>translations/Flashtool_zh_CN.qm</file>
+        <file>translations/Flashtool_zh_TW.qm</file>
+        <file>translations/qt_zh_CN.qm</file>
+        <file>translations/qt_zh_TW.qm</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,10 @@
+Tool Version:5.1540.01.100
+
+New Features/Enhancement:
+    1. Intial Pre-Release for Linux platform 
+
+Bug Fixes:
+    1. N/A
+
+Limitations:
+    1. Not support storage size larger than 4G

@@ -1,0 +1,11 @@
+**** 0304-tmp-v1
+- 实现寻找usb口功能
+- 实现返回com list功能
+//0503----------
+1.modify GetUSBPortName return value change to bool.
+2.modify GetUSBPortName do not use /dev/ttyUSB prefix.
+//0511---------
+1.add close for close usb com port.
+
+
+

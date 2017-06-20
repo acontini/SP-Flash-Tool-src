@@ -1,0 +1,35 @@
+# generate-Makefile
+TARGET = flash_tool.exe
+
+LINUX = 1 
+
+QMAKE.Linux = /proj/mtk80839/qt_SDK/Desktop/Qt/473/gcc/bin/qmake
+QMAKE.Win32 = C:\QtSDK\Desktop\Qt\4.7.3\msvc2008\bin\qmake.exe
+PROJECTFILE = SPFlashToolAPCore.pro
+
+MAKE.Linux = make
+NMAKE_VAL = call "C:\Program Files\Microsoft Visual Studio 9.0\VC\bin\vcvars32.bat"
+MAKE.Win32 = C:\Program Files\Microsoft Visual Studio 9.0\VC\bin\nmake.exe
+
+DEL_FILE.Win32 = del
+DEL_FILE.Linux = rm -f
+
+QMAKE := $(if $(LINUX),$(QMAKE.Linux),$(QMAKE.Win32))
+MAKE  := $(if $(LINUX),$(MAKE.Linux),$(MAKE.Win32))
+DEL_FILE := $(if $(LINUX),$(DEL_FILE.Linux),$(DEL_FILE.Win32))
+MAKEDIR := mkdir
+SET_ENV := $(if $(LINUX),,$(NMAKE_VAL))
+
+#make
+make-tool: MakeFile.tool
+		@$(SET_ENV) 
+		@$(MAKE) -fMakeFile.tool -B
+
+MakeFile.tool: SPFlashToolAPCore.pro
+	@$(QMAKE) -o MakeFile.tool SPFlashToolAPCore.pro
+
+clean:
+		$(MAKE) -fMakeFile.tool distclean
+		$(DEL_FILE) MakeFile.tool
+	
+FORCE:
