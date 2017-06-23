@@ -9,6 +9,5 @@ Requered: QT WebKit and QTextCodec :: setCodecForTr () and QTextCodec :: setCode
 
 SP Flash Tool - program to flash firmware for MTK based smartphones.
 
-/***
+
 * Hot key: SP_Flash_Tool_src SP_Flash_Tool Source code
-***/
