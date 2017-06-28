@@ -7,7 +7,7 @@
 #include "../XMLParser/XMLNode.h"
 #include "../Public/AppCore.h"
 #include "../Host/Inc/RuntimeMemory.h"
-#include "../Utility/FileUtils.h"
+#include "ReadbackSettingAssist.h"
 
 #include <sstream>
 #include <iostream>
@@ -56,18 +56,6 @@ QSharedPointer<APCore::ICommand> ReadbackSetting::CreateCommand(APKey key)
     return cmd;
 }
 
-static std::string GetDirNameFromPath(const std::string& path)
-{
-    int pos = path.find_last_of(C_SEP_CHR);
-    return path.substr(0, pos);
-}
-
-static std::string GetFileNameFromPath(const std::string& path)
-{
-    int pos = path.find_last_of(C_SEP_CHR);
-    return path.substr(pos+1);
-}
-
 void ReadbackSetting::LoadXML(const XML::Node &node)
 {
     LOG("The node name is %s.", node.GetName().c_str());
@@ -96,13 +84,7 @@ void ReadbackSetting::LoadXML(const XML::Node &node)
 
             while (!rb_node.IsEmpty())
             {
-                std::string _path = rb_node.GetText();
-                std::string dirName = GetDirNameFromPath(_path);
-                if(!FileUtils::IsDirectoryExist(dirName))
-                {
-                    std::string fileName = GetFileNameFromPath(_path);
-                    _path = FileUtils::GetAppDirectory() + C_SEP_STR + fileName;
-                }
+                std::string _path = APCore::ReadbackSettingAssist::GenerateValidPath(rb_node.GetText());
                 LOGD("readback file path: %s", _path.c_str());
                 QString index = rb_node.GetAttribute("readback-index").c_str();
                 int _index = index.toInt();

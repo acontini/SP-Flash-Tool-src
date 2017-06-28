@@ -21,7 +21,11 @@ MemoryTestSetting::MemoryTestSetting()
       ufs_dedicated_pattern_test_(false),
       cb_memtest_init(NULL),
       cb_memtest_progress(NULL),
-      cb_memtest_nand_badblock(NULL)
+      cb_memtest_nand_badblock(NULL),
+      cb_gui_(NULL),
+      dramtest_start_address(0),
+      dramtest_length(0),
+      dramtest_stress_cnt(1)
 {
 }
 
@@ -67,6 +71,13 @@ void MemoryTestSetting::SaveXML(XML::Node &node) const
     Q_ASSERT("MemoryTestSetting::SaveXML was not implemented.");
 
     LOG("The node name is %s.", node.GetName().c_str());
+}
+
+void MemoryTestSetting::set_dram_flip_test_paras(U64 addr, U64 len, U32 cnt)
+{
+    dramtest_start_address = addr;
+    dramtest_length = len;
+    dramtest_stress_cnt = cnt;
 }
 
 }

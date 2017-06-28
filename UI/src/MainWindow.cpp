@@ -255,6 +255,11 @@ void MainWindow::LoadDAFile()
     download_widget->LoadDefaultDA();
 }
 
+void MainWindow::LoadLastAuthFile()
+{
+    download_widget->LoadLastAuthFile();
+}
+
 MainWindow::~MainWindow()
 {
     async_updater->waitForFinished();

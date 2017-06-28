@@ -154,7 +154,7 @@
       <item>
        <widget class="QLabel" name="label_copyright">
         <property name="text">
-         <string>Copyright (c) 2001-2016, MediaTek Inc. All rights reserved.</string>
+         <string>Copyright (c) 2001-2017, MediaTek Inc. All rights reserved.</string>
         </property>
        </widget>
       </item>

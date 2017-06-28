@@ -150,7 +150,7 @@ int ConsoleModeEntry::Run(int argc, char *argv[])
 
         return 0;
     }catch(const BaseException& e){
-        LOGE("Exception: err_code[%d], err_msg[%s]", e.err_code(), e.err_msg());
+        LOGE("Exception: err_code[%d], err_msg[%s]", e.err_code(), e.err_msg().c_str());
         return 1;
     }
 }

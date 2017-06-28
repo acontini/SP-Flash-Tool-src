@@ -266,12 +266,14 @@ LIBEX_EXPORT status_t LIB_API flashtool_format(HSESSION hs, enum erase_type type
 //!   type: Indicate test method.
 //!         If this is TEST_MEMORY, do test on memory(RAM) 
 //!         If this is TEST_STORAGE, do test on storage(eMMC, NAND. NOR...)
+//!   addr: memory test start addr
+//!   len:   memory test length
 //!   callbacks: the callback functions used in device operations.
 //!
 //! <b>Returns</b>:  STATUS_OK if success, or other status indicate specified error.
-LIBEX_EXPORT status_t LIB_API flashtool_memory_test(HSESSION hs, memory_type type
-                                                    ,const file_info *emi_container
-                                                    ,const struct callbacks_struct_t* callbacks);
+LIBEX_EXPORT status_t LIB_API flashtool_memory_test(HSESSION hs, memory_type type,
+													uint64 addr, uint64 len,
+                                                    const struct callbacks_struct_t* callbacks);
  
 //! <b>Effects</b>: Test class function.
 //!

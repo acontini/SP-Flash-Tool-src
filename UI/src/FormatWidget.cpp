@@ -55,7 +55,6 @@ void FormatWidget::InitDefault()
     ui_->gb_ForamtEraseFlag->setHidden(true);
 
     ui_->radioButton_AutoFormat->setChecked(true);
-    ui_->radioButton_fmt_others->setChecked(true);
 }
 
 void FormatWidget::LockOnUI()
@@ -107,6 +106,7 @@ void FormatWidget::UpdateUI()
         else
         {
             ui_->radioButton_fmt_all->setVisible(false);
+            ui_->radioButton_fmt_others->setChecked(true);
         }
 
         if(storage_!=HW_STORAGE_NAND)

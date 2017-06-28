@@ -338,6 +338,7 @@
         <xs:element ref="common-ctrl" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="secure-ctrl" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="sbc-pub-key" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="sbc-pub-key1" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="common-lock" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="secure-lock" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="usb-id" minOccurs="0" maxOccurs="1"/>
@@ -384,6 +385,8 @@
       <xs:attribute name="Disable_NAND_boot_speedup" type="xs:boolean" />
       <xs:attribute name="Enable_EFUSE_USB_PID_VID_CUSTOM_EN" type="xs:boolean" />
 	  <xs:attribute name="Disable_UFS_boot" type="xs:boolean"/>
+	  <xs:attribute name="Disable_SBC_PUBK_HASH" type="xs:boolean"/>
+	  <xs:attribute name="Disable_SBC_PUBK_HASH1" type="xs:boolean"/>
     </xs:complexType>
   </xs:element>
 
@@ -400,10 +403,22 @@
       <xs:attribute name="Disable_Rom_Cmd" type="xs:boolean" />
       <xs:attribute name="Disable_DBGPORT_LOCK" type="xs:boolean" />
       <xs:attribute name="Enable_JTAG_SEC_PASSWD" type="xs:boolean" />
+      <xs:attribute name="Enable_PL_AR" type="xs:boolean" />
+      <xs:attribute name="Enable_PK_CUS" type="xs:boolean" />
     </xs:complexType>
   </xs:element>
 
   <xs:element name="sbc-pub-key">
+    <xs:complexType>
+      <xs:sequence>
+	    <xs:element name="key-type" type="key_type_string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="pub-key-e" type="hex_string" />
+        <xs:element name="pub-key-n" type="hex_string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="sbc-pub-key1">
     <xs:complexType>
       <xs:sequence>
 	    <xs:element name="key-type" type="key_type_string" minOccurs="0" maxOccurs="1"/>
@@ -435,6 +450,7 @@
       <xs:attribute name="sbc_pubk_hash_lock" type="xs:boolean" />
 	  <xs:attribute name="sec_msc_lock" type="xs:boolean"/>
 	  <xs:attribute name="custk_lock" type="xs:boolean"/>
+	  <xs:attribute name="sbc_pubk_hash1_lock" type="xs:boolean" />
     </xs:complexType>
   </xs:element>
 

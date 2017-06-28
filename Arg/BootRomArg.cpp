@@ -12,11 +12,7 @@
 
 #include "../Arg/BootRomArg.h"
 #include "../Logger/Log.h"
-
-#ifdef _WIN32
 #include "../BootRom/SLA_Challenge.h"
-#endif
-
 #include "../BootRom/flashtool.h"
 
 using std::cout;
@@ -139,13 +135,8 @@ void BromBootArg::FillDefaultValue()
     // serial link authentication arg
     flashtool_connect_arg_.m_boot_arg.m_auth_handle = NULL;
     flashtool_connect_arg_.m_boot_arg.m_scert_handle = NULL;
-#ifdef _WIN32
     flashtool_connect_arg_.m_boot_arg.m_cb_sla_challenge = SLA_Challenge;
     flashtool_connect_arg_.m_boot_arg.m_cb_sla_challenge_end = SLA_Challenge_END;
-#else
-    flashtool_connect_arg_.m_boot_arg.m_cb_sla_challenge = NULL;
-    flashtool_connect_arg_.m_boot_arg.m_cb_sla_challenge_end = NULL;
-#endif
     flashtool_connect_arg_.m_boot_arg.m_cb_sla_challenge_arg = NULL;
     flashtool_connect_arg_.m_boot_arg.m_cb_sla_challenge_end_arg = NULL;
 

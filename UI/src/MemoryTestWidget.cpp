@@ -26,6 +26,10 @@ MemoryTestWidget::MemoryTestWidget(QTabWidget *parent, MainWindow *window) :
     ui_->lineEdit_address->setValidator(new QRegExpValidator(regExpHex, ui_->lineEdit_address));
     ui_->lineEdit_length->setValidator(new QRegExpValidator(regExpHex, ui_->lineEdit_length));
 
+    ui_->lineEdit_dramtest_address->setValidator(new QRegExpValidator(regExpHex, ui_->lineEdit_dramtest_address));
+    ui_->lineEdit_dramtest_length->setValidator(new QRegExpValidator(regExpHex, ui_->lineEdit_dramtest_length));
+    QRegExp regExpDec("[\\d]{16}");
+    ui_->lineEdit_dramtest_stresscount->setValidator(new QRegExpValidator(regExpDec, ui_->lineEdit_dramtest_stresscount));
 
     QStringList regionList;
 
@@ -103,6 +107,8 @@ void MemoryTestWidget::OnScatterChanged(bool showRegion)
 
 void MemoryTestWidget::on_toolButton_start_clicked()
 {
+    clearUIText();
+
     if(main_window_->ValidateBeforeMemoryTest())
     {
         main_window_->main_controller()->SetPlatformSetting();
@@ -254,6 +260,25 @@ QSharedPointer<APCore::MemoryTestSetting> MemoryTestWidget::CreateMemtestSetting
     if(!ui_->DRAM_FLIP_TEST->isHidden())
     {
         setting->set_dram_flip_test(ui_->DRAM_FLIP_TEST->isChecked());
+        if(setting->dram_flip_test())
+        {
+            U64 addr, len;
+            U32 cnt;
+            if(ui_->radioButton_dramtest_auto->isChecked()) //auto
+            {
+                addr = 0;
+                len = 0; //changed in later flow
+                cnt = 1;
+            }
+            else //manual
+            {
+                addr = ui_->lineEdit_dramtest_address->text().toULongLong(0, 16);
+                len = ui_->lineEdit_dramtest_length->text().toULongLong(0, 16);
+                cnt = ui_->lineEdit_dramtest_stresscount->text().toULong();
+            }
+
+            setting->set_dram_flip_test_paras(addr, len, cnt);
+        }
     }
 
     if(!ui_->NAND_FLASH_TEST->isHidden())
@@ -318,3 +343,21 @@ void MemoryTestWidget::onPlatformChanged()
     }
 }
 
+void MemoryTestWidget::on_radioButton_dramtest_manual_clicked(bool checked)
+{
+    ui_->lineEdit_dramtest_address->setEnabled(checked);
+    ui_->lineEdit_dramtest_length->setEnabled(checked);
+    ui_->lineEdit_dramtest_stresscount->setEnabled(checked);
+}
+
+void MemoryTestWidget::on_radioButton_dramtest_auto_clicked(bool checked)
+{
+    on_radioButton_dramtest_manual_clicked(!checked);
+}
+
+void MemoryTestWidget::clearUIText()
+{
+    ui_->MemoryTestReport->setUpdatesEnabled(FALSE);
+    ui_->MemoryTestReport->clear();
+    ui_->MemoryTestReport->setUpdatesEnabled(TRUE);
+}

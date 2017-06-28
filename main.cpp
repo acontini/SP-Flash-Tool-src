@@ -45,7 +45,7 @@ static int runQtApplication(int argc, char *argv[])
     QSplashScreen splash(pixmap);
     splash.show();
     splash.showMessage("SP Flash Tool is loading...\n\n\n\n\n\n\n\n\n\n\n\n\n"
-                       "   Copyright (c) 2001-2016, MediaTek Inc. All rights reserved."
+                       "   Copyright (c) 2001-2017, MediaTek Inc. All rights reserved."
                        ,Qt::AlignBottom,Qt::gray);
 
     MainWindow w;
@@ -54,6 +54,7 @@ static int runQtApplication(int argc, char *argv[])
     w.ChangeLanguage(index);
     w.LoadDAFile();
     w.LoadScatterFile();
+    w.LoadLastAuthFile();
     w.show();
 
     splash.finish(&w);

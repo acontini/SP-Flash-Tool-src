@@ -17,6 +17,16 @@
 #define _sbc_key_N  \
     sbc_pub_key_u.w_sbc_pub_key.key_n
 
+#define sbc_pub_key_hash1 \
+    sbc_pub_key1_u.r_sbc_pub_key_hash1
+
+#define _sbc_key1_E  \
+    sbc_pub_key1_u.w_sbc_pub_key1.key_e
+
+#define _sbc_key1_N  \
+    sbc_pub_key1_u.w_sbc_pub_key1.key_n
+
+
 #define EfuseOpt2Text(opt)  \
     ((opt)==EFUSE_ENABLE ? "on" : "off")
   
@@ -214,6 +224,7 @@ void EfuseCommand::ReadAll(Connection *conn)
         char spare_buf[64] = { 0 };
         char ackey_buf[16] = { 0 };
         char sbcpk_buf[32] = { 0 };
+        char sbcpk1_buf[32] = { 0 };
 
         char stbkey_bufs[EFUSE_STK_KEY_NUMBER][32] = {{0}};
         char stbkey_names[EFUSE_STK_KEY_NUMBER][64] = {{0}};
@@ -226,6 +237,9 @@ void EfuseCommand::ReadAll(Connection *conn)
 
         secure_arg.sbc_pub_key_hash.buf = sbcpk_buf;
         secure_arg.sbc_pub_key_hash.buf_len = sizeof(sbcpk_buf);
+
+        secure_arg.sbc_pub_key_hash1.buf = sbcpk1_buf;
+        secure_arg.sbc_pub_key_hash1.buf_len = sizeof(sbcpk1_buf);
 
         char extra_bufs[END_KEY][64] = {{0}};
 
@@ -299,6 +313,8 @@ void EfuseCommand::DumpCommonArg(
     DumpEfuseOpt(common, nand_boot_speedup_dis);
     DumpEfuseOpt(common, pid_vid_custom_en);
     DumpEfuseOpt(common, ufs_boot_dis);
+    DumpEfuseOpt(common, sbc_pub_hash_dis);
+    DumpEfuseOpt(common, sbc_pub_hash1_dis);
 
     if (to_write)
     {
@@ -343,6 +359,8 @@ void EfuseCommand::DumpSecureArg(
     DumpEfuseOpt(secure, dbgport_lock_dis);
     DumpEfuseOpt(secure, md1_sbc_en);
     DumpEfuseOpt(secure, c2k_sbc_en);
+    DumpEfuseOpt(secure, pl_ar_en);
+    DumpEfuseOpt(secure, pk_cus_en);
 
     if (to_write)
     {
@@ -376,6 +394,26 @@ void EfuseCommand::DumpSecureArg(
     {
         DumpBinary(secure, sbc_pub_key_hash);
     }
+
+     if (to_write)
+    {
+        DumpEfuseOpt(secure, sbc_pubk1_blow);
+
+        if(secure->_sbc_key1_E.buf_len > 0)
+        {
+            LOGI("sbc_public_key1_e = %s",
+                 secure->_sbc_key1_E.buf);
+        }
+        if(secure->_sbc_key1_N.buf_len > 0)
+        {
+            LOGI("sbc_public_key1_n = %s",
+                 secure->_sbc_key1_N.buf);
+        }
+    }
+    else if (secure->sbc_pub_key_hash1.buf_len > 0)
+    {
+        DumpBinary(secure, sbc_pub_key_hash1);
+    }
 }
 
 void EfuseCommand::DumpLockArg(
@@ -391,6 +429,7 @@ void EfuseCommand::DumpLockArg(
     DumpEfuseOpt(lock, sbc_pubk_hash_lock);
     DumpEfuseOpt(lock, sec_msc_lock);
     DumpEfuseOpt(lock, custk_lock);
+    DumpEfuseOpt(lock, sbc_pubk_hash1_lock);
 }
 
 void EfuseCommand::DumpSTBLockArg(const STB_Lock_PARAM *stb_lock)
@@ -550,7 +589,8 @@ void EfuseCommand::SaveCommonArg(
     SaveEfuseOpt(rb_file, common, nand_boot_dis);
     SaveEfuseOpt(rb_file, common, nand_boot_speedup_dis);
     SaveEfuseOpt(rb_file, common, pid_vid_custom_en);
-    SaveEfuseOpt(rb_file, common, ufs_boot_dis);
+    SaveEfuseOpt(rb_file, common, sbc_pub_hash_dis);
+    SaveEfuseOpt(rb_file, common, sbc_pub_hash1_dis);
 
     if (common->spare.buf_len > 0)
     {
@@ -586,6 +626,8 @@ void EfuseCommand::SaveSecureArgR(
     SaveEfuseOpt(rb_file, secure, dbgport_lock_dis);
     SaveEfuseOpt(rb_file, secure, md1_sbc_en);
     SaveEfuseOpt(rb_file, secure, c2k_sbc_en);
+    SaveEfuseOpt(rb_file, secure, pl_ar_en);
+    SaveEfuseOpt(rb_file, secure, pk_cus_en);
 
     if (secure->ac_key.buf_len > 0)
     {
@@ -595,6 +637,12 @@ void EfuseCommand::SaveSecureArgR(
     {
         SaveBinary(rb_file, secure, sbc_pub_key_hash);
     }
+
+    if (secure->sbc_pub_key_hash1.buf_len > 0)
+    {
+        SaveBinary(rb_file, secure, sbc_pub_key_hash1);
+    }
+
 
     fprintf(rb_file, "\r\n");
 }
@@ -614,6 +662,7 @@ void EfuseCommand::SaveLockArg(
     SaveEfuseOpt(rb_file, lock, sbc_pubk_hash_lock);
     SaveEfuseOpt(rb_file, lock, sec_msc_lock);
     SaveEfuseOpt(rb_file, lock, custk_lock);
+    SaveEfuseOpt(rb_file, lock, sbc_pubk_hash1_lock);
 
     fprintf(rb_file, "\r\n");
 }

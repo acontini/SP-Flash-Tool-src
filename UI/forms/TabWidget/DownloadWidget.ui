@@ -255,9 +255,21 @@ margin:0 0 0 0;</string>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_authFilePath">
-            <property name="placeholderText">
-             <string>Optional: only used for security download</string>
+           <widget class="QComboBox" name="comboBox_authFilePath">
+            <property name="acceptDrops">
+             <bool>false</bool>
+            </property>
+            <property name="whatsThis">
+             <string>Optional: Only used for security download</string>
+            </property>
+            <property name="editable">
+             <bool>false</bool>
+            </property>
+            <property name="maxCount">
+             <number>10</number>
+            </property>
+            <property name="insertPolicy">
+             <enum>QComboBox::InsertAtTop</enum>
             </property>
            </widget>
           </item>

@@ -63,6 +63,10 @@ public:
         cb_memtest_nand_badblock = cb;
     }
     MEMORY_TEST_UI_CALLBACK cb_gui(){ return cb_gui_;}
+    void set_dram_flip_test_paras(U64 addr, U64 len, U32 cnt);
+    U64 start_address(){return dramtest_start_address;}
+    U64 test_length(){return dramtest_length;}
+    U32 test_cnt(){return dramtest_stress_cnt;}
 
 private:
     bool ram_test_;
@@ -86,6 +90,10 @@ private:
     CALLBACK_MEMORYTEST_NAND_BAD_BLOCK_REPORT cb_memtest_nand_badblock;
 
     MEMORY_TEST_UI_CALLBACK cb_gui_;
+
+    U64 dramtest_start_address;
+    U64 dramtest_length;
+    U32 dramtest_stress_cnt;
 };
 
 }

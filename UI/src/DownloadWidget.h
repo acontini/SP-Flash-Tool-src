@@ -63,6 +63,8 @@ public:
     void BuildGeneralSetting(QSharedPointer<ConsoleMode::GeneralSetting> &gen_setting);
     void BuildDownloadSetting(QSharedPointer<APCore::DADownloadAllSetting> &dl_setting);
     void LoadDefaultDA();
+    void LoadAuthFile(const QString& file_name);
+    void LoadLastAuthFile();
 
     unsigned char GetBootMode_ComType(void);
     unsigned char  GetBootMode_ComId(void);
@@ -103,6 +105,7 @@ private:
     Ui::DownloadWidget *ui_;
 
     QStringList scatterFile_historyList_;
+    QStringList authFile_historyList_;
     Download_Scene scene_;
     CheckHeader *header_;
 
@@ -150,6 +153,7 @@ private slots:
     void on_toolButton_Certification_clicked();
     void on_tableWidget_itemChanged(QTableWidgetItem *item);
     void on_checkbox_set_boot_mode_to_meta_clicked();
+    void on_comboBox_authFilePath_currentIndexChanged(int index);
 };
 
 #endif // DOWNLOADWIDGET_H
