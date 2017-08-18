@@ -3,8 +3,10 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <io.h>
-#else
+#elif __linux__
 #include <sys/io.h>
+#else
+#include <sys/uio.h>
 #endif
 
 #include <sys/stat.h>
