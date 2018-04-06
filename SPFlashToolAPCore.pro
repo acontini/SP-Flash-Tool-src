@@ -8,10 +8,6 @@ QT    += xmlpatterns
 QT += webkit network
 #QT += testlib
 
-QMAKE_CXXFLAGS += -Wno-c++11-narrowing
-QMAKE_CXXFLAGS_RELEASE += -Wno-c++11-narrowing
-QMAKE_CXXFLAGS_DEBUG += -Wno-c++11-narrowing
-
 # CONFIG   += console
 #CONFIG -= app_bundle
 DEFINES += QT_NO_CAST_FROM_CAST
