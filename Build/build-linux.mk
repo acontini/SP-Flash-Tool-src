@@ -1,5 +1,19 @@
+# GDR - 20180617.01 >> distro/release-specific gubbins
+OS=$(shell lsb_release -si)
+ARCH=$(shell uname -m | sed 's/x86_//;s/i[3-6]86/32/')
+VER=$(shell lsb_release -sr)
+
+# - specifically for Ubuntu 16 - path to qmake post installation
+
 # tools
-QMAKE                         := /opt/QtSDK/Desktop/Qt/473/gcc/bin/qmake
+ifeq ($(OS),Ubuntu)
+  QMAKE                         := qmake
+else
+  # GDR - why would this be path-specific anyway?
+  QMAKE                         := /opt/QtSDK/Desktop/Qt/473/gcc/bin/qmake
+endif
+# << GDR - 20180617.01
+
 MAKE                          := make
 RM                            := rm
 MKDIR                         := mkdir
