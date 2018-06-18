@@ -521,6 +521,8 @@ void OptionDialog::InitUARTInfo()
 }
 #ifdef _WIN32
 
+#define __in
+
 typedef HDEVNOTIFY (__stdcall *registerDeviceNotify)(__in HANDLE, __in LPVOID, __in DWORD);
 
 void OptionDialog::RegisterDevicePlugNotification()
