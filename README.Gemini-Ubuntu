@@ -1,5 +1,5 @@
 The distributed pre-compiled version of the flasher for Linux is dynamically 
-linked against runs on libpng v1.6.  Ubuntu 14.04 and Ubuntu 16.04 have libpng 
+linked against libpng v1.6.  Ubuntu 14.04 and Ubuntu 16.04 have libpng 
 v1.2.  To run the flasher on these releases the flasher needs to be compiled 
 from source.
 
