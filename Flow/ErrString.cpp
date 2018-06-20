@@ -11,7 +11,7 @@
 
 
 DEFINE_ERROR(ERROR_BL_INCONSISTENT,"Bootloaders must be selected/deselected together.");
-DEFINE_ERROR(ERROR_ROM_MUST_ENABLE,"PMT changed for the ROM; it must be downloaded.\nPlease select \"Firmware upgrade\" scene and try again");
+DEFINE_ERROR(ERROR_ROM_MUST_ENABLE,"The Scatter file does not correspond to this device,\nthe partition table is different.\nPlease select a matching Scatter file\nor select \"Firmware upgrade\" to format the device");
 DEFINE_ERROR(ERROR_PMT_UNAVAILABLE,"Failed to get PMT info.");
 DEFINE_ERROR(ERROR_DATA_LOST,      "Data will be lost.");
 DEFINE_ERROR(ERROR_UNKNOWN_ROM,    "Unrecognized ROM detected.");
