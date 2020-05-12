@@ -23,7 +23,16 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <property name="spacing">
@@ -441,7 +450,7 @@ margin:0 0 0 0;</string>
        </widget>
       </item>
       <item row="4" column="0">
-       <widget class="QTableWidget" name="tableWidget">
+       <widget class="QTableWidget" name="downloadTableWidget">
         <property name="acceptDrops">
          <bool>true</bool>
         </property>
