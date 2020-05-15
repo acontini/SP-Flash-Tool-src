@@ -107,6 +107,7 @@ private:
     void LoadCustk(const XML::Node &node);
     void LoadBypassItems(const XML::Node &node);
     void BypassKeys(EFUSE_KEY key);
+    void LoadSbcPubKey1(const XML::Node &node);
 
 private:
     Efuse_Common_Arg    common_arg_;

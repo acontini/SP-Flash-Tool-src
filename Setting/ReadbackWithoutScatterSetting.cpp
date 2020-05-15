@@ -3,6 +3,7 @@
 #include "../Logger/Log.h"
 #include "../XMLParser/XMLNode.h"
 #include "../Public/AppCore.h"
+#include "ReadbackSettingAssist.h"
 
 namespace APCore
 {
@@ -32,7 +33,7 @@ void ReadbackWithoutScatterSetting::LoadXML(const XML::Node &node)
             XML::Node dl_node = child.GetFirstChildNode();
 
             while(!dl_node.IsEmpty()){
-                std::string path = dl_node.GetText();
+                std::string path = APCore::ReadbackSettingAssist::GenerateValidPath(dl_node.GetText());
                 std::string partion_name = dl_node.GetAttribute("readback-partion");
 
                 op_part_list_t item;

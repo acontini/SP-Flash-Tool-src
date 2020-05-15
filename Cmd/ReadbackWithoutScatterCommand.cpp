@@ -34,18 +34,27 @@ op_part_list_t* ReadbackWithoutScatterCommand::get_partion_list()
     return list;
 }
 
-void ReadbackWithoutScatterCommand::UpdateUploadPartitionInfo(const op_part_list_t* flist, partition_info_list_t* p_part_list)
+void ReadbackWithoutScatterCommand::UpdateUploadPartitionInfo(partition_info_list_t* pReadback_part_list, const op_part_list_t* flist, partition_info_list_t* p_part_list)
 {
     int count = part_list_.size();
+	int readbackCount = 0;
     for(int i = 0; i < count; i++)
     {
-        if(strcmp(p_part_list->part[i].part_name, flist[i].part_name) == 0
-                && strcmp(p_part_list->part[i].file_name, flist[i].file_path) != 0)
-        {
-            strncpy(p_part_list->part[i].file_name, flist[i].file_path, strlen(flist[i].file_path) + 1);
-            continue;
-        }
+    	for (int j = 0; j < p_part_list->count; ++j)
+    	{
+    		if(strcmp(p_part_list->part[j].part_name, flist[i].part_name) == 0)
+	        {
+	        	memcpy(&(pReadback_part_list->part[readbackCount]), &(p_part_list->part[j]), sizeof(partition_info_t));
+				if (strcmp(pReadback_part_list->part[readbackCount].file_name, flist[i].file_path) != 0)
+				{
+					strncpy(pReadback_part_list->part[readbackCount].file_name, flist[i].file_path, strlen(flist[i].file_path) + 1);
+				}
+				++readbackCount;
+	            break;
+	        }
+    	}
     }
+	pReadback_part_list->count = readbackCount;
 }
 
 void ReadbackWithoutScatterCommand::exec(const QSharedPointer<Connection> &conn){
@@ -68,8 +77,9 @@ void ReadbackWithoutScatterCommand::exec(const QSharedPointer<Connection> &conn)
     {
         goto exit;
     }
-    
-    UpdateUploadPartitionInfo(flist, &partInfoList);
+
+	partition_info_list_t readback_partInfoList;
+    UpdateUploadPartitionInfo(&readback_partInfoList, flist, &partInfoList);
     cbs.cb_op_progress = cb_rb_operation_progress;
     cbs.cb_stage_message = cb_rb_stage_message;
 
@@ -79,7 +89,7 @@ void ReadbackWithoutScatterCommand::exec(const QSharedPointer<Connection> &conn)
 
     status = flashtool_upload(
                 hs,
-                &partInfoList,
+                &readback_partInfoList,
                 &cbs);
 
     LOGI("Readback result(%d)",status);

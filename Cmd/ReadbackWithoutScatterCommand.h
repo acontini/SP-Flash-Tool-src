@@ -31,7 +31,7 @@ public:
 
 private:
     op_part_list_t* get_partion_list();
-    void UpdateUploadPartitionInfo(const op_part_list_t* flist, partition_info_list_t* p_part_list);
+    void UpdateUploadPartitionInfo(partition_info_list_t* pReadback_part_list, const op_part_list_t* flist, partition_info_list_t* p_part_list);
 
 private:
     std::vector<op_part_list_t> part_list_;

@@ -20,6 +20,7 @@ DownloadWidget::DownloadWidget(QTabWidget *parent, MainWindow *window) :
     main_window_(window),
     ui_(new Ui::DownloadWidget),
     scatterFile_historyList_(),
+    authFile_historyList_(),
     scene_(DOWNLOAD_ONLY),
     header_(new CheckHeader(Qt::Horizontal, this)),
     storage_(HW_STORAGE_EMMC),
@@ -60,9 +61,6 @@ DownloadWidget::DownloadWidget(QTabWidget *parent, MainWindow *window) :
 
     //LoadDefaultDA();
 
-    ui_->label_authFile->setVisible(true);
-    ui_->lineEdit_authFilePath->setVisible(true);
-    ui_->pushButton_authFile->setVisible(true);
     ShowUnavailableItems(false);
 
     UpdateImageList(true, scene_);
@@ -77,6 +75,9 @@ DownloadWidget::~DownloadWidget()
     IniItem item("history.ini", "RecentOpenFile", "scatterHistory");
 
     item.SaveStringListValue(scatterFile_historyList_);
+
+    item.SetItemName("authHistory");
+    item.SaveStringListValue(authFile_historyList_);
 
     UpdateCustomSceneSelectItems();
 
@@ -140,6 +141,59 @@ void DownloadWidget::on_pushButton_scatterLoading_clicked()
     }
 }
 
+void DownloadWidget::LoadAuthFile(const QString& filename)
+{
+    QString file_name = filename;
+    if(!file_name.isEmpty())
+    {
+        file_name = QDir::toNativeSeparators(file_name);
+        LOG("file_name: %s", file_name.toLocal8Bit().constData());
+
+        if(main_window_->main_controller()->LoadAuthFile(file_name))
+        {
+            int index = authFile_historyList_.indexOf(file_name);
+            //always set select item to index 0
+            //1. new, insert at 0
+            //2. old, not at 0, move to 0
+            //3. old, at 0, do nothing
+            if(index < 0)
+            {
+                authFile_historyList_.push_front(file_name);
+            }
+            else if(index != 0)
+            {
+                authFile_historyList_.move(index, 0);
+            }
+
+            ui_->comboBox_authFilePath->clear();
+            ui_->comboBox_authFilePath->insertItems(0, authFile_historyList_);
+            ui_->comboBox_authFilePath->addItem("");
+            ui_->comboBox_authFilePath->setCurrentIndex(0);
+        }
+        else
+        {
+            authFile_historyList_.removeFirst();
+            ui_->comboBox_authFilePath->clear();
+            ui_->comboBox_authFilePath->insertItems(0, authFile_historyList_);
+            ui_->comboBox_authFilePath->addItem("");
+            ui_->comboBox_authFilePath->setCurrentIndex(-1);
+        }
+    }
+
+    LOG("The authFile history list size is %d.\n", authFile_historyList_.size());
+}
+
+void DownloadWidget::LoadLastAuthFile()
+{
+    IniItem item("history.ini", "RecentOpenFile", "authHistory");
+    authFile_historyList_ = item.GetStringListValue();
+    if(!authFile_historyList_.isEmpty())
+    {
+        QString lastAuth = authFile_historyList_[0];
+        LoadAuthFile(lastAuth);
+    }
+}
+
 void DownloadWidget::on_pushButton_authFile_clicked()
 {
     QString file_name = QFileDialog::getOpenFileName(
@@ -148,19 +202,7 @@ void DownloadWidget::on_pushButton_authFile_clicked()
                 "",
                 LoadQString(LANGUAGE_TAG, IDS_STRING_AUTH_BIN));
 
-    if(!file_name.isEmpty())
-    {
-        file_name = QDir::toNativeSeparators(file_name);
-
-        if(main_window_->main_controller()->LoadAuthFile(file_name))
-        {
-            ui_->lineEdit_authFilePath->setText(file_name);
-        }
-        else
-        {
-            ui_->lineEdit_authFilePath->setText("");
-        }
-    }
+    LoadAuthFile(file_name);
 }
 
 void DownloadWidget::on_pushButton_CertFile_clicked()
@@ -1005,7 +1047,7 @@ void DownloadWidget::BuildGeneralSetting(
     arg->da_file=ui_->lineEdit_agentFilePath->text().toUtf8().constData();
     arg->scatter_file=scatter_path.toUtf8().constData();
 
-    arg->auth_file=ui_->lineEdit_authFilePath->text().toUtf8().constData();
+    arg->auth_file=ui_->comboBox_authFilePath->currentText().toUtf8().constData();
     arg->cert_file=ui_->lineEdit_certFilePath->text().toUtf8().constData();
 
     std::list<ConsoleMode::RomItem> items;
@@ -1314,5 +1356,18 @@ void DownloadWidget::on_checkbox_set_boot_mode_to_meta_clicked()
     {
         EnableBootMode_ComType(false);
         EnableBootMode_ComId(false);
+    }
+}
+
+void DownloadWidget::on_comboBox_authFilePath_currentIndexChanged(int index)
+{
+    if(index > 0 && index <authFile_historyList_.size())
+    {
+        authFile_historyList_.move(index, 0);
+
+        ui_->comboBox_authFilePath->clear();
+        ui_->comboBox_authFilePath->insertItems(0, authFile_historyList_);
+        ui_->comboBox_authFilePath->addItem("");
+        ui_->comboBox_authFilePath->setCurrentIndex(0);
     }
 }

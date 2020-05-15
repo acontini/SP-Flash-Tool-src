@@ -820,6 +820,11 @@ string ErrorLookup::BromErrorMessage(STATUS_E error_code,
         tipMsg = "There is no DSP_BL in previous load on target, please use full set erase and download again.";
         break;
 
+    case STATUS_DRAM_TEST_FAILED:
+        errMsg = "[H/W] DA detect DRAM Flip test fail";
+        tipMsg = "Maybe joint or DRAM HW issue. Please check.";
+        break;
+
     default:
         break;
     }

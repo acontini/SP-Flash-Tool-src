@@ -35,7 +35,7 @@ int __stdcall MemoryTestCommand::cb_memorytest_progress(
         }
         else if(mt_arg->m_test_method == HW_MEM_DRAM_FLIP_TEST)
         {
-            instance->UpdateUI(QString().sprintf("[FLIP]%d%%\thave test: 0x%08X", progress, finished_bytes));
+            instance->UpdateUI(QString().sprintf("[FLIP]%d%%\thave test len: 0x%08X", progress, finished_bytes));
         }
     }
     return 0;
@@ -177,7 +177,11 @@ void MemoryTestCommand::exec(const QSharedPointer<Connection> &conn)
                     .arg(conn->da_report().m_ext_ram_size/1024*8);
             UpdateUI(msg);
         }
-        DRAMFlipTest(mt_arg, &mt_result, conn->da_report(),conn->FTHandle());
+        int ret = DRAMFlipTest(mt_arg, &mt_result, conn->da_report(),conn->FTHandle());
+        if(ret != S_DONE)
+        {
+            THROW_BROM_EXCEPTION(ret,0);
+        }
     }
 
     }
@@ -571,20 +575,74 @@ int MemoryTestCommand::DRAMFlipTest(FlashTool_MemoryTest_Arg *mt_arg,
                   const DA_REPORT_T &da_report,
                   FLASHTOOL_API_HANDLE_T ft_handle)
 {
+    //paras: addr, len, cnt
+    mt_arg->m_start_addr    = memtest_setting.start_address();
+
+
     // DRAM or SRAM
     if ( HW_RAM_DRAM == da_report.m_ext_ram_type )
     {
+        if(mt_arg->m_start_addr >= da_report.m_ext_ram_size)
+        {
+            LOGE("addr[0x%llx] >= ext_ram_size[0x%llx]", mt_arg->m_start_addr, da_report.m_ext_ram_size);
+            return STATUS_EXCEED_AVALIABLE_RANGE;
+        }
+
         mt_arg->m_memory_device = HW_MEM_EXT_DRAM;
+        mt_arg->m_size          = memtest_setting.test_length() == 0
+                                 ? (da_report.m_ext_ram_size - mt_arg->m_start_addr)
+                                 : memtest_setting.test_length();
+
+        if(mt_arg->m_start_addr + mt_arg->m_size > da_report.m_ext_ram_size)
+        {
+            LOGE("addr[0x%llx] + len[0x%llx] > ext_ram_size[0x%llx]", mt_arg->m_start_addr, mt_arg->m_size, da_report.m_ext_ram_size);
+            return STATUS_EXCEED_AVALIABLE_RANGE;
+        }
     }
     else
     {
+        if(mt_arg->m_start_addr >= da_report.m_int_sram_size)
+        {
+            LOGE("addr[0x%llx] >= int_sram_size[0x%llx]", mt_arg->m_start_addr, da_report.m_int_sram_size);
+            return STATUS_EXCEED_AVALIABLE_RANGE;
+        }
+
         mt_arg->m_memory_device = HW_MEM_EXT_SRAM;
+        mt_arg->m_size          = memtest_setting.test_length() == 0
+                                 ? (da_report.m_int_sram_size - mt_arg->m_start_addr)
+                                 : memtest_setting.test_length();
+
+        if(mt_arg->m_start_addr + mt_arg->m_size > da_report.m_int_sram_size)
+        {
+            LOGE("addr[0x%llx] + len[0x%llx] > int_sram_size[0x%llx]", mt_arg->m_start_addr, mt_arg->m_size, da_report.m_int_sram_size);
+            return STATUS_EXCEED_AVALIABLE_RANGE;
+        }
     }
 
     // Test method : flip test
     mt_arg->m_test_method = HW_MEM_DRAM_FLIP_TEST;
 
-    return CHECK_METEST_RESULT(FlashTool_MemoryTest(ft_handle, mt_arg, mt_result));
+    LOG("dram flip test para: addr[0x%llx], len[0x%llx], cnt[%lu]"
+        , mt_arg->m_start_addr, mt_arg->m_size, memtest_setting.test_cnt());
+
+    int ret = S_DONE;
+    for(U32 i=0; i<memtest_setting.test_cnt(); i++)
+    {
+
+        LOG("dram flip test , current round: %u", i);
+        QString msg = QString("Current Round: %1").arg(i);
+        if(memtest_setting.test_cnt()>1)
+            UpdateUI(msg, Qt::darkCyan);
+
+        ret = CHECK_METEST_RESULT(FlashTool_MemoryTest(ft_handle, mt_arg, mt_result));
+
+        LOG("Round %u Pass", i);
+        msg = QString("Round %1 Pass").arg(i);
+        if(ret == S_DONE && memtest_setting.test_cnt()>1)
+            UpdateUI(msg, Qt::darkGreen);
+    }
+    LOG("dram flip test DONE");
+    return ret;
 }
 
 void MemoryTestCommand::NANDTest(FlashTool_MemoryTest_Arg *mt_arg,

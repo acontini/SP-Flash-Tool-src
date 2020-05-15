@@ -29,7 +29,9 @@ using std::string;
 
 #define _sbc_key_E sbc_pub_key_u.w_sbc_pub_key.key_e
 #define _sbc_key_N sbc_pub_key_u.w_sbc_pub_key.key_n
-
+ 
+#define _sbc_key1_E sbc_pub_key1_u.w_sbc_pub_key1.key_e
+#define _sbc_key1_N sbc_pub_key1_u.w_sbc_pub_key1.key_n
 
 static bool Str2Buf(_BUFFER *buf, const string &str)
 {
@@ -228,6 +230,10 @@ void EfuseSetting::LoadXML(const XML::Node &node)
       {
 	 LoadBypassItems(child_node);
       }
+      else if (_STRICMP(node_tag, "sbc-pub-key1"))
+      {
+         LoadSbcPubKey1(child_node);
+      }
       /*
       else
       {
@@ -261,7 +267,7 @@ void EfuseSetting::LoadCommonCtrl(
    common_arg_.pid_vid_custom_en = Bool2EfuseOpt(text);
 
    text = node.GetAttribute("Disable_UFS_boot");
-   common_arg_.pid_vid_custom_en = Bool2EfuseOpt(text);
+   common_arg_.ufs_boot_dis= Bool2EfuseOpt(text);
 
    text = node.GetAttribute("USB_download_type");
    common_arg_.usbdl_type = atoi(text.c_str());
@@ -274,6 +280,11 @@ void EfuseSetting::LoadCommonCtrl(
    {
       common_arg_.usbdl_type_blow = EFUSE_DISABLE;
    }
+
+   text = node.GetAttribute("Disable_SBC_PUBK_HASH");
+   common_arg_.sbc_pub_hash_dis = Bool2EfuseOpt(text);
+   text = node.GetAttribute("Disable_SBC_PUBK_HASH1");
+   common_arg_.sbc_pub_hash1_dis = Bool2EfuseOpt(text);
 }
 
 void EfuseSetting::LoadUsbID(
@@ -340,6 +351,12 @@ void EfuseSetting::LoadSecureCtrl(
 
    text = node.GetAttribute("Enable_JTAG_SEC_PASSWD");
    secure_arg_.jtag_sec_passwd_en = Bool2EfuseOpt(text);
+
+   text = node.GetAttribute("Enable_PL_AR");
+   secure_arg_.pl_ar_en= Bool2EfuseOpt(text);
+
+   text = node.GetAttribute("Enable_PK_CUS");
+   secure_arg_.pk_cus_en= Bool2EfuseOpt(text);
 }
 
 void EfuseSetting::LoadSbcPubKey(
@@ -396,6 +413,61 @@ void EfuseSetting::LoadSbcPubKey(
    }
 }
 
+void EfuseSetting::LoadSbcPubKey1(
+   const XML::Node &node)
+{
+   string keyE, keyN, key_type;
+   string node_tag;
+
+   XML::Node child_node = node.GetFirstChildNode();
+
+   while (!child_node.IsEmpty())
+   {
+      node_tag = child_node.GetName();
+
+      if (_STRICMP(node_tag, "pub-key-e"))
+      {
+         Q_ASSERT(keyE.empty());
+         keyE = child_node.GetText();
+      }
+      else if (_STRICMP(node_tag, "pub-key-n"))
+      {
+         Q_ASSERT(keyN.empty());
+         keyN = child_node.GetText();
+      }
+      else if(_STRICMP(node_tag, "key-type"))
+      {
+         Q_ASSERT(keyN.empty());
+         key_type = child_node.GetText();
+         if(_STRICMP(key_type, "legacy"))
+         {
+            LOGD("legacy");
+            secure_arg_.sbc_pub_key1_u.w_sbc_pub_key1.key_type= 0;
+         }
+         else if(_STRICMP(key_type, "pss"))
+         {
+            LOGD("pss");
+            secure_arg_.sbc_pub_key1_u.w_sbc_pub_key1.key_type= 1;
+         }
+      }
+      /*
+      else
+      {
+      Q_ASSERT(0);
+      break;
+      }
+      */
+      child_node = child_node.GetNextSibling();
+   }
+
+   if (Str2Buf(&secure_arg_._sbc_key1_E, keyE) &&
+      Str2Buf(&secure_arg_._sbc_key1_N, keyN))
+   {
+      secure_arg_.sbc_pubk1_blow = EFUSE_ENABLE;
+   }
+}
+
+
 void EfuseSetting::LoadAcKey(
    const XML::Node &node)
 {
@@ -439,6 +511,9 @@ void EfuseSetting::LoadSecureLock(
    
    text = node.GetAttribute("custk_lock");
    lock_arg_.custk_lock = Bool2EfuseOpt(text);
+
+   text = node.GetAttribute("sbc_pubk_hash1_lock");
+   lock_arg_.sbc_pubk_hash1_lock = Bool2EfuseOpt(text);
 }
 
 void EfuseSetting::LoadMHWRes(const XML::Node &node)

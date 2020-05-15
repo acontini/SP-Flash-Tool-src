@@ -261,5 +261,18 @@
         <emmc type-name = "EMMC" is-support = "true" is-support-auto-format = "true" hw-storage-type = "HW_STORAGE_EMMC" mem-storage-type = "HW_MEM_EMMC" storage-addressing-type = "16"></emmc>
         <sdmmc type-name = "SDMMC" is-support = "true" is-support-auto-format = "false" hw-storage-type = "HW_STORAGE_SDMMC" mem-storage-type = "HW_MEM_SDMMC" storage-addressing-type = "8"></sdmmc>
     </platform>                        
+    <platform name ="MT8695">
+	    <nor type-name = "NOR" is-support = "false" is-support-auto-format = "false" hw-storage-type = "HW_STORAGE_NOR" mem-storage-type = "HW_MEM_NOR" storage-addressing-type = "8"></nor>
+        <nand type-name = "NAND" is-support = "true" is-support-auto-format = "true" hw-storage-type = "HW_STORAGE_NAND" mem-storage-type = "HW_MEM_NAND" storage-addressing-type = "8"></nand>
+        <emmc type-name = "EMMC" is-support = "true" is-support-auto-format = "true" hw-storage-type = "HW_STORAGE_EMMC" mem-storage-type = "HW_MEM_EMMC" storage-addressing-type = "16"></emmc>
+        <sdmmc type-name = "SDMMC" is-support = "true" is-support-auto-format = "false" hw-storage-type = "HW_STORAGE_SDMMC" mem-storage-type = "HW_MEM_SDMMC" storage-addressing-type = "8"></sdmmc>
+    </platform>
+    <platform name ="MT0713">
+	    <nor type-name = "NOR" is-support = "false" is-support-auto-format = "false" hw-storage-type = "HW_STORAGE_NOR" mem-storage-type = "HW_MEM_NOR" storage-addressing-type = "8"></nor>
+	    <ufs type-name = "UFS" is-support = "true" is-support-auto-format = "true" hw-storage-type = "HW_STORAGE_UFS" mem-storage-type = "HW_MEM_UFS" storage-addressing-type = "8"></ufs>
+        <nand type-name = "NAND" is-support = "false" is-support-auto-format = "true" hw-storage-type = "HW_STORAGE_NAND" mem-storage-type = "HW_MEM_NAND" storage-addressing-type = "8"></nand>
+        <emmc type-name = "EMMC" is-support = "true" is-support-auto-format = "true" hw-storage-type = "HW_STORAGE_EMMC" mem-storage-type = "HW_MEM_EMMC" storage-addressing-type = "16"></emmc>
+        <sdmmc type-name = "SDMMC" is-support = "true" is-support-auto-format = "false" hw-storage-type = "HW_STORAGE_SDMMC" mem-storage-type = "HW_MEM_SDMMC" storage-addressing-type = "8"></sdmmc>
+    </platform>
     
 </storage-setting>

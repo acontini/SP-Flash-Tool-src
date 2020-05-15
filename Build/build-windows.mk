@@ -24,11 +24,12 @@ FlashTool.Dependency.Files := \
  $(wildcard Lib/*.qhc) \
  $(wildcard Lib/*.qch) \
  $(wildcard Lib/*.exe) \
+ $(wildcard Lib/*.json)
 
 FlashTool.Dependency.Dirs := \
  Lib/QtWin/$(BUILD_TYPE)
  
-FlashTool.Output.Files := *.xml *.xsd *.ini *.dll *.bin *.qch *.qhc *.txt *.exe\
+FlashTool.Output.Files := *.xml *.xsd *.ini *.dll *.bin *.qch *.qhc *.txt *.exe *.json\
 	codecs imageformats sqldrivers $(BUILD_TYPE)
 
 #Step1: set up environment
@@ -48,6 +49,7 @@ all: set-up
 	$(RM) -rf $(FlashTool.Dir)/codecs $(FlashTool.Dir)/imageformats $(FlashTool.Dir)/sqldrivers
 	$(MV) -u $(QtFlashTool.Special.Dirs) $(FlashTool.Dir)
 	$(CP) -f $(FlashTool.Dir)/$(BUILD_TYPE)/* $(FlashTool.Dir)
+	$(RM) -rf $(FlashTool.Dir)/$(BUILD_TYPE)
 	@echo $(BUILD_TYPE) version build pass
 	
 .PHONY: clean

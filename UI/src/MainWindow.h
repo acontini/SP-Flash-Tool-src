@@ -186,6 +186,7 @@ public:
     void UpdateWindowTitle(bool enableTrace = false);
     void LoadScatterFile();
     void LoadDAFile();
+    void LoadLastAuthFile();
     void RemoveWriteMemoryPage();
     void SetUI();
     void CreateWidget();

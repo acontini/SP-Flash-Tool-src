@@ -47,7 +47,8 @@ win32:LIBS += -L$$quote($$PWD/lib) \
 unix:LIBS += -L$$quote($$PWD/Lib) \
     -L$$quote($$PWD/Lib/QtLinux) \
     -lflashtool \
-    -lflashtoolEx
+    -lflashtoolEx \
+    -lsla_challenge
 
 SOURCES += \
     Conn/Connection.cpp \
@@ -220,7 +221,8 @@ SOURCES += \
     Setting/SetBootModeSetting.cpp \
     Cmd/SetBootModeCommand.cpp \
     Setting/CheckRPMBSetting.cpp \
-    Cmd/CheckRPMBCommand.cpp
+    Cmd/CheckRPMBCommand.cpp \
+    Setting/ReadbackSettingAssist.cpp
 
 # ONLY Windows related begins here
 win32:SOURCES += Host/Win/RuntimeMemory.cpp \
@@ -427,7 +429,8 @@ HEADERS += \
     Setting/SetBootModeSetting.h \
     Cmd/SetBootModeCommand.h \
     Setting/CheckRPMBSetting.h \
-    Cmd/CheckRPMBCommand.h
+    Cmd/CheckRPMBCommand.h \
+    Setting/ReadbackSettingAssist.h
 
 linux:HEADERS += Linux/WINDEF.H \
     Linux/linux_flash_tool.h \

@@ -127,6 +127,8 @@ typedef	enum {
 	MT6763 = 191, //Bianco
 	MT6758 = 192, //vinson
 	MT6739 = 193, //zion
+	MT8695 = 194,
+	MT0713 = 195, //Cannon
 	BBCHIP_TYPE_END,
 	AUTO_DETECT_BBCHIP = 254,
 	UNKNOWN_BBCHIP_TYPE = 255

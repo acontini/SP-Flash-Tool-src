@@ -492,11 +492,13 @@ typedef struct {
     unsigned short  usb_vid;    // 16 bit
     
     unsigned int    spare_blow;
+    unsigned int    sbc_pub_hash_dis; //-1
+    unsigned int    sbc_pub_hash1_dis; //-1
 #define spare_num_of_byte spare.buf_len
     SpareData       spare;
     unsigned int    pid_vid_custom_en;
     unsigned int    ufs_boot_dis; //-1
-    unsigned int    ext_reserved[31]; //32-1
+    unsigned int    ext_reserved[29]; //32-1-1-1
 } Efuse_Common_Arg;
 
 // Argument for writing Efuse security register
@@ -513,6 +515,9 @@ typedef struct{
     unsigned int    jtag_dis;
     
     unsigned int    ac_key_blow;
+    unsigned int  pl_ar_en; //-1
+    unsigned int pk_cus_en; //-1
+	
     KeyBufST        ac_key;         // ACK length 128 bit = 16 byte
     
     unsigned int    sbc_pubk_blow;
@@ -522,6 +527,13 @@ typedef struct{
         KeyHashValue r_sbc_pub_key_hash;  // return sbc_public_key hash value when using Brom_WriteEfuseAll()
     }sbc_pub_key_u;
 
+    unsigned int    sbc_pubk1_blow;
+    union
+    {
+	PublicKeyStringST w_sbc_pub_key1;  //-1// sbc_public_key argument when using Brom_WriteEfuseSecure()
+	KeyHashValue r_sbc_pub_key_hash1;  // return sbc_public_key hash value when using Brom_WriteEfuseAll()
+    }sbc_pub_key1_u;
+
     unsigned int 	jtag_sw_con;
     unsigned int  rom_cmd_dis;
     unsigned int  dbgport_lock_dis;
@@ -529,7 +541,7 @@ typedef struct{
     unsigned int  md1_sbc_en; //-1
     unsigned int  c2k_sbc_en; //-1
     unsigned int  dxcc_kcst_en; //-1 //DXCC_CM_FLAG 
-    unsigned int  reserved[60]; //64-2-1-1
+    unsigned int  reserved[57]; //64-2-1-1-1-1-1
 } Efuse_Secure_Arg;
 
 // Argument for locking Efuse register
@@ -545,7 +557,8 @@ typedef struct{
     unsigned int sbc_pubk_hash_lock;
     unsigned int sec_msc_lock; //-1
     unsigned int custk_lock; //-1
-    unsigned int reserved[30];//32-1-1
+    unsigned int sbc_pubk_hash1_lock; //-1
+    unsigned int reserved[29];//32-1-1-1
 } Efuse_Lock_Arg;
 
 typedef struct{

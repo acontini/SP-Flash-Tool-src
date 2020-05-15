@@ -57,6 +57,7 @@ public:
         connect_params_struct_t conn_da_params;
         conn_da_params.checksum_level = 0;
         conn_da_params.battery_setting = 2;
+		conn_da_params.connect_da_end_stage = CONN_SECOND_DA;
         file_info da_info;
         memset(&da_info, 0, sizeof(da_info));
         da_info.input_type = OP_SOURCE_FILE;
