@@ -139,7 +139,7 @@ private slots:
     void on_pushButton_scatterLoading_clicked();
 
     //enable/disable a ROM
-    void on_tableWidget_cellClicked(int row, int column);
+    void on_downloadTableWidget_cellClicked(int row, int column);
     void on_pushButton_download_clicked();
     void on_pushButton_stop_clicked();
 
@@ -151,7 +151,7 @@ private slots:
     void on_pushButton_authFile_clicked();
     void on_comboBox_Scene_activated(int index);
     void on_toolButton_Certification_clicked();
-    void on_tableWidget_itemChanged(QTableWidgetItem *item);
+    void on_downloadTableWidget_itemChanged(QTableWidgetItem *item);
     void on_checkbox_set_boot_mode_to_meta_clicked();
     void on_comboBox_authFilePath_currentIndexChanged(int index);
 };

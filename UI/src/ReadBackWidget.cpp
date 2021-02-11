@@ -24,11 +24,11 @@ static const unsigned int kDefaultAddress = 0;
 static const unsigned int kDefaultLength = 4096;
 static const QString kDefaultReadFlag = "PageSpare";
 static const QString kEMMCReadFlag = "N/A";
-static const QString kDefaultAddrStr = "0x0000000000000000";
-static const QString kDefaultLenStr = "0x0000000000001000";
+static const QString kDefaultAddrStr = "0x000000000ab00000";
+static const QString kDefaultLenStr = "0x0000000000500000";
 static const QString kEmmcDefRegionStr="EMMC_USER";
 static const QString kUfsDefRegionStr="UFS_LU2";
-static const QString kDefaultFilePrefix = "ROM_";
+static const QString kDefaultFilePrefix = "NVRAM";
 
 ReadBackWidget::ReadBackWidget(QTabWidget *parent, MainWindow *window) :
     TabWidgetBase(3, tr("&Readback"), parent),

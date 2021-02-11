@@ -27,10 +27,13 @@ DownloadWidget::DownloadWidget(QTabWidget *parent, MainWindow *window) :
     bUpdateScene(false)
 {
     ui_->setupUi(this);
+    ui_->label_authFile->hide();
+    ui_->comboBox_authFilePath->hide();
+    ui_->pushButton_authFile->hide();
 
     setAcceptDrops(true);
 
-    ui_->tableWidget->setHorizontalHeader(header_);
+    ui_->downloadTableWidget->setHorizontalHeader(header_);
 
     QObject::connect(header_,SIGNAL(sectionClicked(int)),
                      this, SLOT(slot_OnHeaderView_click(int)));
@@ -43,7 +46,7 @@ DownloadWidget::DownloadWidget(QTabWidget *parent, MainWindow *window) :
     connect(this, SIGNAL(signal_load_rom_failed()), SLOT(slot_OnLoadRomFailed()));
     connect (main_window_->processing_dialog(), SIGNAL(user_cancel_processing()),this, SLOT(slot_OnUserCancelLoadScatter()));
 
-    ui_->tableWidget->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+    ui_->downloadTableWidget->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 
     main_window_->main_controller()->GetPlatformSetting()->addObserver(this);
     main_window_->scatter_observer()->addObserver(this);
@@ -67,7 +70,7 @@ DownloadWidget::DownloadWidget(QTabWidget *parent, MainWindow *window) :
 
     header_->SetChecked(true);
 
-    ui_->tableWidget->setColumnHidden(columnRegion, true);
+    ui_->downloadTableWidget->setColumnHidden(columnRegion, true);
 }
 
 DownloadWidget::~DownloadWidget()
@@ -263,6 +266,13 @@ void DownloadWidget::on_pushButton_download_clicked()
 {
     IniItem item("option.ini", "Download", "RiskReminder");
     bool isRiskReminderOn = item.GetBooleanValue();
+
+    int sceneIndex = ui_->comboBox_Scene->currentIndex();
+    if (sceneIndex == 0) {
+        QMessageBox::warning(this, "Format ALL option disabled", "This option has been disabled", QMessageBox::Ok);
+        return;
+    }
+
     if(isRiskReminderOn)
     {
         int ristRet = QMessageBox::warning(this, LoadQString(LANGUAGE_TAG, IDS_STRING_WARNING),
@@ -319,7 +329,7 @@ void DownloadWidget::slot_OnHeaderView_click(int index)
     }
 }
 
-void DownloadWidget::on_tableWidget_cellClicked(int row, int column)
+void DownloadWidget::on_downloadTableWidget_cellClicked(int row, int column)
 {
     if (column == ColumnLocation)
     {
@@ -333,9 +343,9 @@ void DownloadWidget::dragEnterEvent(QDragEnterEvent *event)
     {
         QPoint point = event->pos();
 
-        point = ui_->tableWidget->mapFromParent(event->pos());
+        point = ui_->downloadTableWidget->mapFromParent(event->pos());
 
-        QRect rect = ui_->tableWidget->geometry();
+        QRect rect = ui_->downloadTableWidget->geometry();
 
         LOG("The  table widget rect x1 = %d, y1 = %d, x2 = %d, y2 = %d\n",
             rect.x(), rect.y(), rect.width(), rect.height());
@@ -349,7 +359,7 @@ void DownloadWidget::dragEnterEvent(QDragEnterEvent *event)
 
 void DownloadWidget::dropEvent(QDropEvent *event)
 {
-    if(!ui_->tableWidget->underMouse())
+    if(!ui_->downloadTableWidget->underMouse())
     {
         return;
     }
@@ -511,9 +521,9 @@ void DownloadWidget::slot_OnLoadRomFailed()
                           LoadQString(LANGUAGE_TAG, IDS_STRING_ROMFILE_WARNING),
                           LoadQString(LANGUAGE_TAG, IDS_STRING_YES));
 
-    int row = ui_->tableWidget->currentRow();
+    int row = ui_->downloadTableWidget->currentRow();
 
-    QTableWidgetItem *tableItem = ui_->tableWidget->item(row, ColumnLocation);
+    QTableWidgetItem *tableItem = ui_->downloadTableWidget->item(row, ColumnLocation);
     if (tableItem != NULL) {
         tableItem->setText(tr(""));
     }
@@ -700,7 +710,7 @@ void DownloadWidget::UpdateImageList(std::list<ImageInfo> &image_list)
             row_count++;
         }
     }
-    ui_->tableWidget->setRowCount(row_count);
+    ui_->downloadTableWidget->setRowCount(row_count);
 
     SCATTER_Head_Info info;
     main_window_->main_controller()->GetScatterHeadInfo(&info);
@@ -739,33 +749,33 @@ void DownloadWidget::UpdateImageList(std::list<ImageInfo> &image_list)
         SetRomAddress(row, ColumnBeginAddr, it->begin_addr);
         SetRomAddress(row, ColumnEndAddr, it->end_addr);
 
-        tableItem = ui_->tableWidget->item(row, columnRegion);
+        tableItem = ui_->downloadTableWidget->item(row, columnRegion);
         if(tableItem == NULL){
             tableItem = new QTableWidgetItem();
-            ui_->tableWidget->setItem(row, columnRegion, tableItem);
+            ui_->downloadTableWidget->setItem(row, columnRegion, tableItem);
         }
 
         tableItem->setText(EnumToRomString(storage_, it->region));
 
-        tableItem = ui_->tableWidget->item(row, ColumnLocation);
+        tableItem = ui_->downloadTableWidget->item(row, ColumnLocation);
         if (tableItem == NULL) {
             tableItem = new QTableWidgetItem();
-            ui_->tableWidget->setItem(row, ColumnLocation,tableItem);
+            ui_->downloadTableWidget->setItem(row, ColumnLocation,tableItem);
         }
         tableItem->setText(QDir::toNativeSeparators(QString::fromLocal8Bit(it->location.c_str())));
 
-        tableItem = ui_->tableWidget->item(row, ColumnName);
+        tableItem = ui_->downloadTableWidget->item(row, ColumnName);
         if (tableItem == NULL) {
             tableItem = new QTableWidgetItem();
-            ui_->tableWidget->setItem(row, ColumnName, tableItem);
+            ui_->downloadTableWidget->setItem(row, ColumnName, tableItem);
         }
         tableItem->setText(it->name.c_str());
 
-        tableItem = ui_->tableWidget->item(row, ColumnEnable);
+        tableItem = ui_->downloadTableWidget->item(row, ColumnEnable);
         if (tableItem == NULL) {
             bUpdateScene = false;
             tableItem = new QTableWidgetItem();
-            ui_->tableWidget->setItem(row, ColumnEnable, tableItem);
+            ui_->downloadTableWidget->setItem(row, ColumnEnable, tableItem);
         }
 
         int item_index = main_window_->main_controller()->QueryROMIndex(tableItem->row());
@@ -773,7 +783,7 @@ void DownloadWidget::UpdateImageList(std::list<ImageInfo> &image_list)
         main_window_->main_controller()->EnableROM(item_index, it->enabled);
 
         bUpdateScene = false;
-        if (it->enabled && !ui_->tableWidget->item(row, ColumnLocation)->text().isEmpty())
+        if (it->enabled && !ui_->downloadTableWidget->item(row, ColumnLocation)->text().isEmpty())
         {
             tableItem->setCheckState(Qt::Checked);
             tableItem->setFlags(tableItem->flags()| Qt::ItemIsUserCheckable);
@@ -783,7 +793,7 @@ void DownloadWidget::UpdateImageList(std::list<ImageInfo> &image_list)
         {
             tableItem->setCheckState(Qt::Unchecked);
             has_uncheck_item = true;
-            if(ui_->tableWidget->item(row, ColumnLocation)->text().isEmpty())
+            if(ui_->downloadTableWidget->item(row, ColumnLocation)->text().isEmpty())
             {
                 tableItem->setFlags(tableItem->flags()&~Qt::ItemIsUserCheckable);
                 tableItem->setToolTip("Please select valid rom file first");
@@ -821,7 +831,7 @@ void DownloadWidget::UpdateImageList()
 
              if(ok && index >= 0)
              {
-                 QTableWidgetItem *item = ui_->tableWidget->item(index, 0);
+                 QTableWidgetItem *item = ui_->downloadTableWidget->item(index, 0);
                  if(NULL != item)
                  {
                      item->setCheckState(Qt::Checked);
@@ -838,20 +848,20 @@ void DownloadWidget::UpdateImageList(bool checked, Download_Scene scene)
 {
     bool CheckAll = checked;
 
-    for(int row = 0; row < ui_->tableWidget->rowCount(); row++)
+    for(int row = 0; row < ui_->downloadTableWidget->rowCount(); row++)
     {
-        QTableWidgetItem *item = ui_->tableWidget->item(row, 0);
+        QTableWidgetItem *item = ui_->downloadTableWidget->item(row, 0);
 
         if( scene == WIPE_DATA && CheckAll != false)
         {
-            QString rom_name = ui_->tableWidget->item(row, 1)->text();
+            QString rom_name = ui_->downloadTableWidget->item(row, 1)->text();
 
             checked = AppCore::IsEnableRom(string((const char*)rom_name.toLocal8Bit()), scene);
         }
 
         bUpdateScene = false;
 
-        checked = CheckAll && !ui_->tableWidget->item(row, ColumnLocation)->text().isEmpty();
+        checked = CheckAll && !ui_->downloadTableWidget->item(row, ColumnLocation)->text().isEmpty();
 
         checked ? item->setCheckState(Qt::Checked) : item->setCheckState(Qt::Unchecked);
 
@@ -889,10 +899,10 @@ void DownloadWidget::UpdateScatterFile(const QString &file_name)
 
 void DownloadWidget::SetRomAddress(int row, int column, U64 address)
 {
-    QTableWidgetItem *tableItem = ui_->tableWidget->item(row, column);
+    QTableWidgetItem *tableItem = ui_->downloadTableWidget->item(row, column);
     if (tableItem == NULL) {
         tableItem = new QTableWidgetItem();
-        ui_->tableWidget->setItem(row, column,tableItem);
+        ui_->downloadTableWidget->setItem(row, column,tableItem);
     }
     tableItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
     tableItem->setText(QString("0x%1").arg(address,16,16,QChar('0')));
@@ -900,9 +910,9 @@ void DownloadWidget::SetRomAddress(int row, int column, U64 address)
 
 bool DownloadWidget::hasUncheckedRomInfo()
 {
-    for(int row = 0; row < ui_->tableWidget->rowCount(); row++)
+    for(int row = 0; row < ui_->downloadTableWidget->rowCount(); row++)
     {
-        QTableWidgetItem *item = ui_->tableWidget->item(row, 0);
+        QTableWidgetItem *item = ui_->downloadTableWidget->item(row, 0);
 
         if(item == NULL)
             return false;
@@ -927,9 +937,9 @@ void DownloadWidget::UpdateCustomSceneSelectItems()
 {
     QStringList items;
 
-    for(int i = 0; i < ui_->tableWidget->rowCount(); i++)
+    for(int i = 0; i < ui_->downloadTableWidget->rowCount(); i++)
     {
-        QTableWidgetItem *item = ui_->tableWidget->item(i, 0);
+        QTableWidgetItem *item = ui_->downloadTableWidget->item(i, 0);
 
         if(item && item->checkState() == Qt::Checked)
         {
@@ -968,7 +978,7 @@ void DownloadWidget::LockOnUI()
     ui_->pushButton_download->setEnabled(false);
     ui_->pushButton_stop->setEnabled(true);
     ui_->FileLoadFrame->setEnabled(false);
-    ui_->tableWidget->setEnabled(false);
+    ui_->downloadTableWidget->setEnabled(false);
 }
 
 void DownloadWidget::DoFinished()
@@ -977,7 +987,7 @@ void DownloadWidget::DoFinished()
     ui_->pushButton_download->setEnabled(true);
     ui_->pushButton_stop->setEnabled(false);
     ui_->FileLoadFrame->setEnabled(true);
-    ui_->tableWidget->setEnabled(true);
+    ui_->downloadTableWidget->setEnabled(true);
 }
 
 void DownloadWidget::UpdateUI()
@@ -1205,10 +1215,10 @@ int DownloadWidget::GetSecRoIndex()
     QStringList wipeList = settings.value("WIPE_DATA").toStringList();
     settings.endGroup();
 
-    for(int i = 0; i < ui_->tableWidget->rowCount(); i++)
+    for(int i = 0; i < ui_->downloadTableWidget->rowCount(); i++)
     {
-        if(ui_->tableWidget->item(i, ColumnEnable)->checkState() == Qt::Checked &&
-               wipeList.contains(ui_->tableWidget->item(i, ColumnName)->text()))
+        if(ui_->downloadTableWidget->item(i, ColumnEnable)->checkState() == Qt::Checked &&
+               wipeList.contains(ui_->downloadTableWidget->item(i, ColumnName)->text()))
             return i;
     }
 
@@ -1219,7 +1229,7 @@ void DownloadWidget::choose_rom_file(int row, int column)
 {
     if(column == ColumnLocation)
     {
-        QString file = ui_->tableWidget->item(row,ColumnLocation)->text();
+        QString file = ui_->downloadTableWidget->item(row,ColumnLocation)->text();
         QString new_file = QFileDialog::getOpenFileName(this, "Open File",
                                             file, "All File (*.*)");
         if(!new_file.isEmpty())
@@ -1230,7 +1240,7 @@ void DownloadWidget::choose_rom_file(int row, int column)
             main_window_->processing_dialog()->show();
 
             int item_index = main_window_->main_controller()->QueryROMIndex(row);
-            QTableWidgetItem *tableItem = ui_->tableWidget->item(row, ColumnEnable);
+            QTableWidgetItem *tableItem = ui_->downloadTableWidget->item(row, ColumnEnable);
             tableItem->setFlags(tableItem->flags()|Qt::ItemIsUserCheckable);
             main_window_->main_controller()->LoadROMAsync(new_file,item_index,
                 new SimpleCallback<DownloadWidget>(this,&DownloadWidget::OnLoadRomDone),
@@ -1308,12 +1318,12 @@ void DownloadWidget::onPlatformChanged()
 
 void DownloadWidget::OnScatterChanged(bool showRegion)
 {
-      ui_->tableWidget->setColumnHidden(columnRegion, !showRegion);
+      ui_->downloadTableWidget->setColumnHidden(columnRegion, !showRegion);
 }
 
-void DownloadWidget::on_tableWidget_itemChanged(QTableWidgetItem *item)
+void DownloadWidget::on_downloadTableWidget_itemChanged(QTableWidgetItem *item)
 {
-    QTableWidgetItem *tableItem = ui_->tableWidget->item(item->row(), ColumnEnable);
+    QTableWidgetItem *tableItem = ui_->downloadTableWidget->item(item->row(), ColumnEnable);
     if(tableItem == NULL)
         return;
 
@@ -1327,7 +1337,7 @@ void DownloadWidget::on_tableWidget_itemChanged(QTableWidgetItem *item)
 
     int item_index = main_window_->main_controller()->QueryROMIndex(item->row());
 
-    if(item->checkState() == Qt::Checked && !ui_->tableWidget->item(item->row(), ColumnLocation)->text().isEmpty())
+    if(item->checkState() == Qt::Checked && !ui_->downloadTableWidget->item(item->row(), ColumnLocation)->text().isEmpty())
     {
         main_window_->main_controller()->EnableROM(item_index, true);
     }

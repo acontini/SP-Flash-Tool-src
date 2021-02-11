@@ -1,5 +1,19 @@
+# GDR - 20180617.01 >> distro/release-specific gubbins
+OS=$(shell lsb_release -si)
+ARCH=$(shell uname -m | sed 's/x86_//;s/i[3-6]86/32/')
+VER=$(shell lsb_release -sr)
+
+# - specifically for Ubuntu 16 - path to qmake post installation
+
 # tools
-QMAKE                         := /opt/QtSDK/Desktop/Qt/473/gcc/bin/qmake
+ifeq ($(OS),Ubuntu)
+  QMAKE                         := qmake
+else
+  # GDR - why would this be path-specific anyway?
+  QMAKE                         := /opt/QtSDK/Desktop/Qt/473/gcc/bin/qmake
+endif
+# << GDR - 20180617.01
+
 MAKE                          := make
 RM                            := rm
 MKDIR                         := mkdir
@@ -26,13 +40,8 @@ QtFlashTool.Dependency.Files := \
  $(wildcard Lib/Updater) \
  $(wildcard Lib/FlashToolUpdater) \
 
-QtFlashTool.Dependency.Dirs := \
- $(wildcard Lib/QtLinux/*)
-
 QtFlashTool.Output.Files := *.xml *.xsd *.ini *.so *.bin *.sh *.qhc *.qch *.txt \
-	Updater FlashToolUpdater flash_tool \
-	bin lib plugins \
-	codecs imageformats sqldrivers
+	Updater FlashToolUpdater flash_tool
 
 #Step1: set up environment
 .PHONY: set-up
@@ -44,15 +53,11 @@ set-up:
 all: set-up 
 	$(CDDIR) $(OUTPUT_PATH);$(PWD);$(QMAKE) $(QtFlashTool.SRC.Path) $(QtFlashTool.CCFLAGS);$(MAKE);
 	$(CP) $(QtFlashTool.Dependency.Files) $(OUTPUT_PATH)
-	$(CP) -R $(QtFlashTool.Dependency.Dirs) $(OUTPUT_PATH)
 	$(eval QtPlugins := $(OUTPUT_PATH)/codecs  $(OUTPUT_PATH)/imageformats  $(OUTPUT_PATH)/sqldrivers)
 	$(RM) -rf $(QtPlugins)
-	$(CP) -R $(OUTPUT_PATH)/plugins/* $(OUTPUT_PATH)
 	@echo $(BUILD_TYPE) version build pass
 	
 .PHONY: clean
 clean: 
 	$(CDDIR) $(OUTPUT_PATH);$(PWD);$(MAKE) clean
 	$(CDDIR) $(OUTPUT_PATH);$(PWD);$(RM) -rf $(QtFlashTool.Output.Files)
-
-
